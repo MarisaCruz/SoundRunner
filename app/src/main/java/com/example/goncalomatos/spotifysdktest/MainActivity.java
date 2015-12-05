@@ -1,16 +1,14 @@
 package com.example.goncalomatos.spotifysdktest;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageButton;
 
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
@@ -37,6 +35,10 @@ public class MainActivity extends AppCompatActivity implements
     private static final String REDIRECT_URI = "my-first-spotify-app://callback";
     private static final int REQUEST_CODE = 1337;
 
+    // This is just for testing purposes
+    private static final String TAG = MainActivity.class.getSimpleName();
+    //
+
     private Player mPlayer;
 
     @Override
@@ -46,14 +48,23 @@ public class MainActivity extends AppCompatActivity implements
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        //Run Button Logic
+        ImageButton runBtn = (ImageButton) findViewById(R.id.run_button);
+        runBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                startRun();
             }
         });
+
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID,
                 AuthenticationResponse.Type.TOKEN,
@@ -183,5 +194,13 @@ public class MainActivity extends AppCompatActivity implements
     protected void onDestroy() {
         Spotify.destroyPlayer(this);
         super.onDestroy();
+    }
+
+    protected void startRun() {
+        Log.d(TAG, "START RUN");
+    }
+
+    protected void settingsMenu() {
+        Log.d(TAG, "Settings Menu Activated");
     }
 }
