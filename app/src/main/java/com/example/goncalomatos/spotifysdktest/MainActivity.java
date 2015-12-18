@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.spotify.sdk.android.authentication.AuthenticationClient;
@@ -25,6 +26,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+
+import settings.Settings;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -73,6 +76,8 @@ public class MainActivity extends AppCompatActivity implements
         AuthenticationRequest request = builder.build();
 
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
+
+        settings();
     }
 
     protected void openSpotifyPlayer(AuthenticationResponse response, final String songId) {
@@ -202,5 +207,18 @@ public class MainActivity extends AppCompatActivity implements
 
     protected void settingsMenu() {
         Log.d(TAG, "Settings Menu Activated");
+    }
+
+    private void settings() {
+
+
+        ImageButton actiondefi=(ImageButton) findViewById(R.id.settingsButton);
+        actiondefi.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View View) {
+                startActivity(new Intent(MainActivity.this, Settings.class));
+            }
+        });
     }
 }

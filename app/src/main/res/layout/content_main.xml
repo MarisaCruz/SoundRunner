@@ -18,4 +18,14 @@
         android:scaleType="fitCenter"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
+
+    <ImageButton
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:id="@+id/settingsButton"
+        android:layout_marginBottom="42dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:src="@mipmap/settings" />
 </RelativeLayout>
