@@ -35,8 +35,6 @@ public class Settings extends PreferenceActivity{
         EditText birthday = (EditText) findViewById(R.id.birthday);
         EditText textWeight = (EditText) findViewById(R.id.textWeight);
         EditText textHeight = (EditText) findViewById(R.id.textHeight);
-        EditText textEmail = (EditText) findViewById(R.id.textEmail);
-        EditText textPassword = (EditText) findViewById(R.id.textPassword);
 
         Intent i=new Intent(Settings.this,MainActivity.class);
         i.putExtra("NAME", textName.toString());
