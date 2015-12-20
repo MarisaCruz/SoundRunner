@@ -57,15 +57,6 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
         AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID,
                 AuthenticationResponse.Type.TOKEN,
                 REDIRECT_URI);
@@ -95,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements
 
     protected String buildEchoNestRequest(){
         return "http://developer.echonest.com/api/v4/song/search?api_key=" + ECHONEST_KEY
-                + "&style=rock&min_tempo=100&bucket=id:spotify&bucket=tracks&results=1";
+                + "&style=jazz&bucket=id:spotify&bucket=tracks&results=1";
     }
 
     @Override
@@ -197,7 +188,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     protected void startRun() {
-        Log.d(TAG, "START RUN");
+        Intent runIntent = new Intent(this, RunActivity.class);
+        startActivity(runIntent);
     }
 
     protected void settingsMenu() {
