@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
         }
 
         return super.onOptionsItemSelected(item);
@@ -207,7 +207,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void settings() {
-
 
         ImageButton actiondefi=(ImageButton) findViewById(R.id.settingsButton);
         actiondefi.setOnClickListener(new View.OnClickListener() {
