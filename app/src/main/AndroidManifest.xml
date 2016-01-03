@@ -33,6 +33,21 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.goncalomatos.spotifysdktest.MainActivity" />
         </activity>
+
+        <service
+            android:name=".MockService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name=".RunActivity"
+            android:label="@string/title_activity_run"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.goncalomatos.spotifysdktest.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

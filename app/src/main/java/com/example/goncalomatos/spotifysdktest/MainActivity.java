@@ -1,5 +1,7 @@
 package com.example.goncalomatos.spotifysdktest;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -200,6 +202,9 @@ public class MainActivity extends AppCompatActivity implements
 
     protected void startRun() {
         Log.d(TAG, "START RUN");
+
+        startActivity(new Intent(MainActivity.this, RunActivity.class));
+
     }
 
     protected void settingsMenu() {
