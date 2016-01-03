@@ -13,9 +13,23 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
+import com.spotify.sdk.android.authentication.AuthenticationClient;
+import com.spotify.sdk.android.authentication.AuthenticationRequest;
+import com.spotify.sdk.android.authentication.AuthenticationResponse;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class RunActivity extends AppCompatActivity {
 
+    private static final String CLIENT_ID = "68528c82f0a14b1da759976535533f48";
+    private static final String ECHONEST_KEY = "BM5IMCRRSRYJMLZVK";
+    private static final String REDIRECT_URI = "my-first-spotify-app://callback";
+    private static final int REQUEST_CODE = 1337;
+
     private Intent intent;
+    private SpotifyHelper spotifyHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,20 +38,35 @@ public class RunActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         ActionBar actionBar = getSupportActionBar();
         if(actionBar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
         intent = new Intent(this, MockService.class);
+
+        AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID,
+                AuthenticationResponse.Type.TOKEN,
+                REDIRECT_URI);
+        builder.setScopes(new String[]{"user-read-private", "streaming"});
+        AuthenticationRequest request = builder.build();
+
+        AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        // Check if result comes from the correct activity
+        if (requestCode == REQUEST_CODE) {
+            final AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
+
+            if (response.getType() == AuthenticationResponse.Type.TOKEN) {
+                spotifyHelper = new SpotifyHelper(RunActivity.this, response);
+            }
+        }
     }
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -64,7 +93,10 @@ public class RunActivity extends AppCompatActivity {
     private void handleSensorData(Intent sensorDataIntent)
     {
         int pace = sensorDataIntent.getIntExtra("pace", 200);
-        Log.d("RUN", "" +pace);
+        Log.d("RUN", "" + pace);
+        if(spotifyHelper != null) {
+            spotifyHelper.play("spotify:track:568nXF19QXYPZnQ6XSkuSH");
+        }
     }
 
 
