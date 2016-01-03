@@ -27,9 +27,6 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-import settings.Settings;
-
-
 public class MainActivity extends AppCompatActivity implements
         PlayerNotificationCallback, ConnectionStateCallback {
 
@@ -217,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements
 
             @Override
             public void onClick(View View) {
-                startActivity(new Intent(MainActivity.this, Settings.class));
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
             }
         });
     }
