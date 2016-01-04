@@ -8,12 +8,14 @@ import android.util.Log;
 
 import java.util.Random;
 
-public class MockService  extends Service {
+public class MockService extends Service {
     private static final String TAG = "BroadcastService";
     public static final String BROADCAST_ACTION = "com.soundRunner.Mock";
     private final Handler handler = new Handler();
     Intent intent;
     int counter = 0;
+
+    private static final int INTERVAL = 20000;
 
     @Override
     public void onCreate() {
@@ -23,16 +25,17 @@ public class MockService  extends Service {
     }
 
     @Override
-    public void onStart(Intent intent, int startId) {
+    public int onStartCommand(Intent intent, int flags, int startId) {
         handler.removeCallbacks(sendUpdatesToUI);
         handler.postDelayed(sendUpdatesToUI, 1000); // 1 second
 
+        return super.onStartCommand(intent, flags, startId);
     }
 
     private Runnable sendUpdatesToUI = new Runnable() {
         public void run() {
             DisplayLoggingInfo();
-            handler.postDelayed(this, 5000); // 10 seconds
+            handler.postDelayed(this, INTERVAL);
         }
     };
 
@@ -41,7 +44,7 @@ public class MockService  extends Service {
 
         Random random = new Random();
 
-        int mockPace = (int) (random.nextInt(300));
+        int mockPace = (int) (random.nextInt(275));
 
         intent.putExtra("pace", mockPace);
         sendBroadcast(intent);

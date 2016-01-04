@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
@@ -30,6 +31,7 @@ public class RunActivity extends AppCompatActivity {
 
     private Intent intent;
     private SpotifyHelper spotifyHelper;
+    private int lastPace = -50;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +81,7 @@ public class RunActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        // TODO: 04/01/16  this should be a foreground service
         startService(intent);
         registerReceiver(broadcastReceiver, new IntentFilter(MockService.BROADCAST_ACTION));
     }
@@ -90,13 +93,26 @@ public class RunActivity extends AppCompatActivity {
         stopService(intent);
     }
 
+    public void updateTrackInfo(String currentTrack){
+        TextView trackInfoUI = (TextView) findViewById(R.id.track_info);
+        trackInfoUI.setText(currentTrack);
+    }
+
     private void handleSensorData(Intent sensorDataIntent)
     {
         int pace = sensorDataIntent.getIntExtra("pace", 200);
         Log.d("RUN", "" + pace);
-        if(spotifyHelper != null) {
-            spotifyHelper.play("spotify:track:568nXF19QXYPZnQ6XSkuSH");
+
+        //TODO: strategies and stuff
+        if (pace > lastPace + 50 || pace < lastPace - 50 ) {
+            Log.d("RunActivity", "changin pace");
+
+            if(spotifyHelper != null) {
+                spotifyHelper.queryAndPlay(pace);
+            }
         }
+        lastPace = pace;
+
     }
 
 
