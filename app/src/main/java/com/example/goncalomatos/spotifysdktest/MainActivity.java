@@ -5,27 +5,30 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
+import android.view.View;
 import android.widget.ImageButton;
 
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.Viewport;
+import com.jjoe64.graphview.series.BarGraphSeries;
+import com.jjoe64.graphview.series.DataPoint;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
 import com.spotify.sdk.android.player.Config;
-import com.spotify.sdk.android.player.Spotify;
 import com.spotify.sdk.android.player.ConnectionStateCallback;
 import com.spotify.sdk.android.player.Player;
 import com.spotify.sdk.android.player.PlayerNotificationCallback;
 import com.spotify.sdk.android.player.PlayerState;
+import com.spotify.sdk.android.player.Spotify;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements
         PlayerNotificationCallback, ConnectionStateCallback {
@@ -34,6 +37,9 @@ public class MainActivity extends AppCompatActivity implements
     private static final String ECHONEST_KEY = "BM5IMCRRSRYJMLZVK";
     private static final String REDIRECT_URI = "my-first-spotify-app://callback";
     private static final int REQUEST_CODE = 1337;
+    private static final Random RANDOM = new Random();
+    private BarGraphSeries<DataPoint> series;
+    private int pssX = 0;
 
     // This is just for testing purposes
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -65,6 +71,19 @@ public class MainActivity extends AppCompatActivity implements
 //                        .setAction("Action", null).show();
 //            }
 //        });
+        // get graph view instance
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        GraphView graph = (GraphView) findViewById(R.id.graph);
+        // get data
+        series = new BarGraphSeries<DataPoint>();
+        graph.addSeries(series);
+
+        Viewport viewport = graph.getViewport();
+        viewport.setYAxisBoundsManual(true);
+        viewport.setMinY(0);
+        viewport.setMaxY(10);
+        viewport.setScrollable(true);
 
         AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID,
                 AuthenticationResponse.Type.TOKEN,
@@ -191,6 +210,40 @@ public class MainActivity extends AppCompatActivity implements
     public void onPlaybackError(ErrorType errorType, String errorDetails) {
         Log.d("MainActivity", "Playback error received: " + errorType.name());
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Vamos simular em tempo real com a linha que acrescentar dados ao gráfico
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                for (int i = 0; i < 100; i++) {
+                    runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            addEntry();
+                        }
+                    });
+
+                    // sleep to slow down the add of entries
+                    try {
+                        Thread.sleep(600);
+                    } catch (InterruptedException e) {
+                    }
+                }
+            }
+        }).start();
+    }
+
+    private void addEntry() {
+        // Aqui, nós vamos optar por exibir no máximo 10 pontos
+        series.appendData(new DataPoint(pssX++, RANDOM.nextDouble() * 10d), true, 10);
+    }
+
 
     @Override
     protected void onDestroy() {
