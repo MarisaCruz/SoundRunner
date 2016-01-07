@@ -19,3 +19,4 @@
     <include layout="@layout/statistics" />
 
 </android.support.design.widget.CoordinatorLayout>
+
