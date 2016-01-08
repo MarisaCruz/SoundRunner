@@ -1,6 +1,7 @@
 package com.example.goncalomatos.spotifysdktest;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,8 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.LegendRenderer;
+import com.jjoe64.graphview.ValueDependentColor;
 import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements
     private static final Random RANDOM = new Random();
     // This is just for testing purposes
     private static final String TAG = MainActivity.class.getSimpleName();
+   // private LineGraphSeries<DataPoint> series;
     private BarGraphSeries<DataPoint> series;
     private int pssX = 0;
     //
@@ -84,12 +88,42 @@ public class MainActivity extends AppCompatActivity implements
         // data
         series = new BarGraphSeries<DataPoint>();
         graph.addSeries(series);
-        // customize a little bit viewport
+     //Display legend
+        series.setTitle("Speed Chart");
+        series.setColor(Color.RED);
+    /** series.setDrawDataPoints(true);
+        series.setDataPointsRadius(8);
+        series.setThickness(5);
+
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(10);
+        paint.setPathEffect(new DashPathEffect(new float[]{8, 5}, 0));
+        series.setCustomPaint(paint);
+       // series.setTitle("Medium Speed"); */
+        graph.getLegendRenderer().setVisible(true);
+        graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
+
+        series.setValueDependentColor(new ValueDependentColor<DataPoint>() {
+            @Override
+            public int get(DataPoint data) {
+                return Color.rgb((int) data.getX() * 200/20, (int) Math.abs(data.getY() * 200/10),100);
+            }
+        });
+
+        series.setSpacing(50);
+
+// draw values on top
+        series.setDrawValuesOnTop(true);
+        series.setValuesOnTopColor(Color.RED);
+        series.setValuesOnTopSize(15);
+    // customize a little bit viewport
         Viewport viewport = graph.getViewport();
         viewport.setYAxisBoundsManual(true);
         viewport.setMinY(0);
         viewport.setMaxY(10);
         viewport.setScrollable(true);
+
 
 
         AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID,
